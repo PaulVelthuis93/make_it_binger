@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jupyter-notebook
+spec:
+  serviceName: "jupyter-notebook"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jupyter-notebook
+  template:
+    metadata:
+      labels:
+        app: jupyter-notebook
+    spec:
+      containers:
+      - name: jupyter-notebook
+        image: jupyter-notebook:latest
+        imagePullPolicy: Never
+        env:
+        - name: JUPYTER_PASSWORD
+          value: "hello"
+        ports:
+        - containerPort: 8888
+          name: notebook
+        volumeMounts:
+        - name: jupyter-notebook-data
+          mountPath: /home/jovyan
+  volumeClaimTemplates:
+  - metadata:
+      name: jupyter-notebook-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: fast
+      resources:
+        requests:
+          storage: 1Gi
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: fast
+provisioner: k8s.io/minikube-hostpath
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jupyter-notebook
+  labels:
+    app: jupyter-notebook
+spec:
+  ports:
+  - port: 8888
+    targetPort: 8888
+  selector:
+    app: jupyter-notebook
+  type: NodePort

@@ -7,7 +7,7 @@ def RedisCheck():
     try:
         # redis.default.svc.cluster.local
         # servicename.namespace.svc.cluster.local
-        r = redis.StrictRedis(host='localhost', port=6379)                          # Connect to local Redis instance
+        r = redis.StrictRedis(host='redis.default.svc.cluster.local', port=6379)                          # Connect to local Redis instance
 
 
 
