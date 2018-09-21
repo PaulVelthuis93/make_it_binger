@@ -24,17 +24,17 @@ spec:
       # By default elasticsearch container is not run as
       # non root user.
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#_notes_for_production_use_and_defaults
-      - name: fix-the-volume-permission
-        image: busybox
-        command:
-        - sh
-        - -c
-        - chown -R 1000:1000 /usr/share/elasticsearch/data
-        securityContext:
-          privileged: true
-        volumeMounts:
-        - name: data
-          mountPath: /usr/share/elasticsearch/data
+      # - name: fix-the-volume-permission
+      #   image: busybox
+      #   command:
+      #   - sh
+      #   - -c
+      #   - chown -R 1000:1000 /usr/share/elasticsearch/data
+      #   securityContext:
+      #     privileged: true
+      #   volumeMounts:
+      #   - name: data
+      #     mountPath: /usr/share/elasticsearch/data
       # NOTE:
       # To increase the default vm.max_map_count to 262144
       # https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#docker-cli-run-prod-mode
@@ -83,7 +83,7 @@ spec:
             value: "elasticsearch-0.es.default.svc.cluster.local,elasticsearch-1.es.default.svc.cluster.local,elasticsearch-2.es.default.svc.cluster.local,elasticsearch-3.es.default.svc.cluster.local,elasticsearch-4.es.default.svc.cluster.local"
           # NOTE: You can increase the heap size
           -  name: ES_JAVA_OPTS
-             value: -Xms4g -Xmx4g
+             value: -Xms256mb -Xmx256mb
   #       volumeMounts:
   #       - name: data
   #         mountPath: /usr/share/elasticsearch/data
