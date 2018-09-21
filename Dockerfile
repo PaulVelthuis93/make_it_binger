@@ -1,9 +1,7 @@
 FROM       python
-
-RUN        pip install beautifulsoup4
-RUN        pip install requests
-COPY       main.py /app/
+COPY       /app /app
+COPY       requirements.txt requirements.txt
+RUN        pip install -r requirements.txt
 WORKDIR    /app
 RUN        chmod a+x main.py
 ENTRYPOINT ["python", "main.py"]
-CMD        ["http://www.mkyong.com/author/marilena/"]
