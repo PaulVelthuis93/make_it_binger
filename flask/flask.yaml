@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: binger-api
+  labels:
+    name: binger-api
+spec:
+  replicas: 1
+  selector:
+    app: binger-api
+  template:
+    metadata:
+      labels:
+        app: binger-api
+    spec:
+      containers:
+        - name: binger-api
+          imagePullPolicy: Never
+          image: binger-api
+          ports:
+            - containerPort: 6666
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: binger-api
+  labels:
+    app: binger-api
+spec:
+  ports:
+  - port: 6666
+    targetPort: 6666
+  selector:
+    app: binger-api
+  type: NodePort
