@@ -15,8 +15,10 @@ def hello():
 
 @app.route("/url", methods=["GET"])
 def get():
-    message = r.lpop('q')                                               # Checks for message
-    return message.decode("utf-8") + " get from redis!"
+    message = r.lpop('q')                                             # Checks for message
+    if message is None:
+        return "https://kafka.apache.org/intro"
+    return message.decode("utf-8")
 
 @app.route("/url", methods=["POST"])
 def post():
