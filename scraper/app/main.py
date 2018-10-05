@@ -19,7 +19,7 @@ def get_body(da_link):
         r = requests.get(da_link)
         body = r.text
         title = BeautifulSoup(body).title.text
-        return {"body": body, "title": title}
+        return {"body": body, "title": title, "url": da_link}
     except:
         logging.debug(f"Invalid link: {da_link}")
         return {"body": None, "title": None}
@@ -39,24 +39,22 @@ def get_urls_from_body(body, url):
         logging.debug(f"Invalid url: {url}")
     return links
 
-def send_urls_to_redis(links):
+def send_data_to_binger(meta_data):
     headers = {'Content-type': 'application/json'}
-    for link in links:
-        try:
-            if link:
-                result = requests.post("http://binger-api:6666/url", headers=headers, data=json.dumps({"url": link}))
-                if result.status_code != 200:
-                    logging.warning(f'Redis replied with a {result.status_code}')
-        except:
-            logging.warning(f"Exception while accessing link:\n{link}")
-            logging.info('Bleuh', exc_info=True)
+    logging.info("sending data to binger ")
+    try:
+        result = requests.post("http://binger-api:6666/urls", headers=headers, data=json.dumps(meta_data))
+        if result.status_code != 200:
+            logging.warning(f'Binger api replied with a {result.status_code}')
+    except:
+        logging.warning('Bleuh', exc_info=True)
 
 while True:
     url = get_url_from_redis()
     if url:
         res = get_body(url)
-        urls = get_urls_from_body(res['body'], url)
-        send_urls_to_redis(urls)
+        res['urls'] = list(get_urls_from_body(res['body'], url))
+        send_data_to_binger(res)
     else:
         logging.warning("no url in queue")
         time.sleep(10)
