@@ -25,6 +25,10 @@ spec:
       containers:
       - name: es-master
         image: quay.io/pires/docker-elasticsearch-kubernetes:6.3.2
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command: ["/bin/sh", "-c", "curl --header \"Content-Type: application/json\" --request PUT --data '{\"mappings\" : {\"_doc\" : {\"properties\":{\"url\":{ \"type\":\"keyword\"},\"title\":{ \"type\":\"keyword\"},\"body\":{ \"type\":\"text\"},\"links\":{ \"type\": \"keyword\"},\"timestamp\" :{ \"type\": \"date\"}}}}}' http://localhost:9200/urls/"]
         env:
         - name: NAMESPACE
           valueFrom:
@@ -63,7 +67,7 @@ spec:
         livenessProbe:
           tcpSocket:
             port: transport
-          initialDelaySeconds: 20
+          initialDelaySeconds: 120
           periodSeconds: 10
         volumeMounts:
         - name: storage
