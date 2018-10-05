@@ -33,9 +33,9 @@ def post():
 def postlist():
     if not request.json or not 'urls' in request.json:
         abort(400)
-    postjson = json.loads(request.json)
+    postjson = request.json
+    print(postjson)
     urllist = postjson['urls']
-
     for url in urllist:
         r.rpush("q", url)
     return "\'" + str(urllist) + "\' posted to redis!"
