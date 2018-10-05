@@ -18,5 +18,5 @@ kubectl apply -f es-ingest-svc.yaml
 kubectl apply -f es-ingest.yaml
 kubectl rollout status -f es-ingest.yaml
 
-kubectl apply -f stateful/es-data-statefull.yaml
-kubectl rollout status -f stateful/es-data-stateful.yaml
+kubectl apply -f stateful/es-data-stateful.yaml
+#kubectl rollout status -f stateful/es-data-stateful.yaml
