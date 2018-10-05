@@ -3,6 +3,7 @@ from flask import request, abort
 import redis
 import time
 import traceback
+import json
 
 app = Flask(__name__)
 # TODO fix exception
@@ -29,7 +30,7 @@ def post():
     return "\'" + urlstring + "\' posted to redis!"
 
 @app.route("/urls", methods=["POST"])
-def post():
+def postlist():
     if not request.json or not 'urls' in request.json:
         abort(400)
     postjson = json.loads(request.json)
