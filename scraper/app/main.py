@@ -36,7 +36,7 @@ def get_urls_from_body(body, url):
     links = set()
     for link in soup.find_all("a"):
         da_awesome_link = link.get("href")
-        if da_awesome_link and da_awesome_link.startswith('/'): # TODO: fix #
+        if da_awesome_link and da_awesome_link.startswith('/', '#'): # TODO: fix #
             da_awesome_link = f'{url}{da_awesome_link}'
         links.add(da_awesome_link)
     return links
