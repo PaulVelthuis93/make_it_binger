@@ -7,8 +7,11 @@ from elasticsearch import Elasticsearch
 
 def get_url_from_redis():
     # try TODO: Catch connection problems
-    url = requests.get("http://binger-api:6666/url")
-
+    try:
+        url = requests.get("http://binger-api:6666/url")
+    except:
+        logging.info('Bleuh', exc_info=True)
+        return None
     return url.text
 
 def get_body(da_link):
@@ -26,7 +29,7 @@ def send_body_to_elastic(body, url, urls, title):
     #     es = Elasticsearch(["http://elasticsearch:9200/"])
     #     es.update(body=es_body)
     # except:
-    #     logging.warn("What am i doing with my life???????")
+    #     logging.warning("What am i doing with my life???????")
 
 def get_urls_from_body(body, url):
     soup = BeautifulSoup(body)
@@ -45,9 +48,10 @@ def send_urls_to_redis(links):
             if link:
                 result = requests.post("http://binger-api:6666/url", headers=headers, data=json.dumps({"url": link}))
                 if result.status_code != 200:
-                    logging.warn(f'Redis replied with a {result.status_code}')
+                    logging.warning(f'Redis replied with a {result.status_code}')
         except:
-            logging.warn(f"Exception while accessing link:\n{link}")
+            logging.warning(f"Exception while accessing link:\n{link}")
+            logging.info('Bleuh', exc_info=True)
 
 while True:
     url = get_url_from_redis()
@@ -57,5 +61,5 @@ while True:
         send_body_to_elastic(res['body'], url, urls, res['title'])
         send_urls_to_redis(urls)
     else:
-        logging.warn("no url in queue")
+        logging.warning("no url in queue")
         time.sleep(10)
