@@ -28,6 +28,18 @@ def post():
     r.rpush("q", urlstring)
     return "\'" + urlstring + "\' posted to redis!"
 
+@app.route("/urls", methods=["POST"])
+def post():
+    if not request.json or not 'urls' in request.json:
+        abort(400)
+    postjson = json.loads(request.json)
+    urllist = postjson['urls']
+
+    for url in urllist:
+        r.rpush("q", url)
+    return "\'" + str(urllist) + "\' posted to redis!"
+
+
 def main():
     app.run(port=6666, host="0.0.0.0")
 
