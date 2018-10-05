@@ -47,7 +47,7 @@ def send_urls_to_redis(links):
                 if result.status_code != 200:
                     logging.warn(f'Redis replied with a {result.status_code}')
         except:
-            logging.warn(" Says: This is fucking awkward, we can't connect, we are gonna dieeeee")
+            logging.warn(f"Exception while accessing link:\n{link}")
 
 while True:
     url = get_url_from_redis()
