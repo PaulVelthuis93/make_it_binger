@@ -33,12 +33,11 @@ def get():
 #     r.rpush("q", urlstring)
 #     return "\'" + urlstring + "\' posted to redis!"
 
+
 @app.route("/urls", methods=["POST"])
 def postlist():
-    logging.warning("im in post!")
-    app.logger.info('there is a post!')
-    if not request.json or not 'url' in request.json or not 'title' in request.json or not 'urls' in request.json or not 'body' in request.json:
-        abort(400)
+    if not request.json or not 'body' in request.json:
+        return jsonify(status="OK", code=200, message="nothing to store", data={})
     postjson = request.json
 
     elastic_answer = send_data_to_elastic(**postjson)

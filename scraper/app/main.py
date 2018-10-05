@@ -10,7 +10,7 @@ def get_url_from_redis():
     try:
         url = requests.get("http://binger-api:6666/url")
     except:
-        logging.info('Bleuh', exc_info=True)
+        logging.warning('Bleuh', exc_info=True)
         return None
     return url.text
 
@@ -22,7 +22,7 @@ def get_body(da_link):
         return {"body": body, "title": title, "url": da_link}
     except:
         logging.debug(f"Invalid link: {da_link}")
-        return {"body": None, "title": None}
+        return {}
 
 
 def get_urls_from_body(body, url):
@@ -41,11 +41,11 @@ def get_urls_from_body(body, url):
 
 def send_data_to_binger(meta_data):
     headers = {'Content-type': 'application/json'}
-    logging.info("sending data to binger ")
     try:
         result = requests.post("http://binger-api:6666/urls", headers=headers, data=json.dumps(meta_data))
         if result.status_code != 200:
             logging.warning(f'Binger api replied with a {result.status_code}')
+        return result
     except:
         logging.warning('Bleuh', exc_info=True)
 
@@ -54,7 +54,8 @@ while True:
     if url:
         res = get_body(url)
         res['urls'] = list(get_urls_from_body(res['body'], url))
-        send_data_to_binger(res)
+        answer = send_data_to_binger(res)
+        logging.warning(answer)
     else:
         logging.warning("no url in queue")
         time.sleep(10)
