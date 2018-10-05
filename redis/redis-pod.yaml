@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis
 spec:
@@ -20,6 +20,40 @@ spec:
         resources:
           limits:
             cpu: "0.1"
+        volumeMounts:
+        - mountPath: "/data"
+          name: redis-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: fast
+      resources:
+        requests:
+          storage: 5Gi
+      
+---
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: fast
+provisioner: k8s.io/minikube-hostpath
+---
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: redis-volume
+#   labels:
+#     type: local
+# spec:
+#   storageClassName: fast
+#   capacity:
+#     storage: 10Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/data/"
 ---
 apiVersion: v1
 kind: Service
