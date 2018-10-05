@@ -15,11 +15,21 @@ Redis can be started via the command:
 
 kubectl exec -it redis redis-cli
 
+## persitence
+
+Make on minikube a persistence folder
+
+	minikube ssh
+	mkdir data
+
 
 # Pub sub inspiration for redis
 
 Redis can use pub sub mechanism, with several consumers and producers
 Inspiration for this mechanism can be found on:
 https://redis.io/topics/pubsub
+
+
+
 
  
