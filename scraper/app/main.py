@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 import logging
 import time
-from elasticsearch import Elasticsearch
+
 
 def get_url_from_redis():
     # try TODO: Catch connection problems
@@ -24,15 +24,6 @@ def get_body(da_link):
         logging.debug(f"Invalid link: {da_link}")
         return {"body": None, "title": None}
 
-def send_body_to_elastic(body, url, urls, title):
-    print("Scraped: " + str(urls))
-    es_body = {"doc":{"body":body, "url": url, "links": list(urls), "title": title, "timestamp": time.time()}}
-    # try:
-    #     # title, timestamp, links
-    #     es = Elasticsearch(["http://elasticsearch:9200/"])
-    #     es.update(body=es_body)
-    # except:
-    #     logging.warning("What am i doing with my life???????")
 
 def get_urls_from_body(body, url):
     links = set()
@@ -44,8 +35,6 @@ def get_urls_from_body(body, url):
             if da_awesome_link and da_awesome_link.startswith(('/', '#', '?')): # TODO: fix #
                 da_awesome_link = f'{url}{da_awesome_link}'
             links.add(da_awesome_link)
-            # if da_awesome_link and not da_awesome_link.startswith(('/', '#', '?')): # TODO: fix #
-            #     links.add(da_awesome_link)
     except:
         logging.debug(f"Invalid url: {url}")
     return links
@@ -67,7 +56,6 @@ while True:
     if url:
         res = get_body(url)
         urls = get_urls_from_body(res['body'], url)
-        send_body_to_elastic(res['body'], url, urls, res['title'])
         send_urls_to_redis(urls)
     else:
         logging.warning("no url in queue")

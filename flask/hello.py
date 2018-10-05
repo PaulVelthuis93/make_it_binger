@@ -2,8 +2,7 @@ from flask import Flask
 from flask import request, abort
 import redis
 import time
-import traceback
-import json
+from elasticsearch import Elasticsearch
 
 app = Flask(__name__)
 # TODO fix exception
@@ -31,14 +30,24 @@ def post():
 
 @app.route("/urls", methods=["POST"])
 def postlist():
-    if not request.json or not 'urls' in request.json:
+    if not request.json or not 'url' in request.json or not 'title' in request.json or not 'urls' in request.json or not 'body' in request.json:
         abort(400)
     postjson = request.json
-    print(postjson)
+    send_body_to_elastic(**postjson)
     urllist = postjson['urls']
     for url in urllist:
         r.rpush("q", url)
     return "\'" + str(urllist) + "\' posted to redis!"
+
+
+def send_body_to_elastic(body, url, urls, title):
+    es_body = {"doc":{"body":body, "url": url, "links": urls, "title": title, "timestamp": time.time()}}
+    try:
+        # title, timestamp, links
+        es = Elasticsearch(["http://elasticsearch:9200/"])
+        es.update(body=es_body)
+    except:
+        logging.warning("What am i doing with my life???????")
 
 
 def main():
