@@ -15,11 +15,14 @@ def get_url_from_redis():
     return url.text
 
 def get_body(da_link):
-    r = requests.get(da_link)
-    # encoding = r.encoding
-    body = r.text
-    title = BeautifulSoup(body).title.text
-    return {"body": body, "title": title}
+    try:
+        r = requests.get(da_link)
+        body = r.text
+        title = BeautifulSoup(body).title.text
+        return {"body": body, "title": title}
+    except:
+        logging.debug(f"Invalid link: {da_link}")
+        return {"body": None, "title": None}
 
 def send_body_to_elastic(body, url, urls, title):
     print("Scraped: " + str(urls))
@@ -32,13 +35,19 @@ def send_body_to_elastic(body, url, urls, title):
     #     logging.warning("What am i doing with my life???????")
 
 def get_urls_from_body(body, url):
-    soup = BeautifulSoup(body)
     links = set()
-    for link in soup.find_all("a"):
-        da_awesome_link = link.get("href")
-        if da_awesome_link and da_awesome_link.startswith('/', '#'): # TODO: fix #
-            da_awesome_link = f'{url}{da_awesome_link}'
-        links.add(da_awesome_link)
+    try:
+        soup = BeautifulSoup(body)
+
+        for link in soup.find_all("a"):
+            da_awesome_link = link.get("href")
+            if da_awesome_link and da_awesome_link.startswith(('/', '#', '?')): # TODO: fix #
+                da_awesome_link = f'{url}{da_awesome_link}'
+            links.add(da_awesome_link)
+            # if da_awesome_link and not da_awesome_link.startswith(('/', '#', '?')): # TODO: fix #
+            #     links.add(da_awesome_link)
+    except:
+        logging.debug(f"Invalid url: {url}")
     return links
 
 def send_urls_to_redis(links):
