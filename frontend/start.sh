@@ -9,8 +9,7 @@ fi
 kubectl config use-context minikube
 eval $(minikube docker-env)
 
-
-kubectl apply -f ./frontend.yaml --validate=false
 docker build -t frontend . && kubectl delete pods -l app=frontend
-
+kubectl apply -f ./frontend.yaml --validate=false
+	
 minikube service frontend-service

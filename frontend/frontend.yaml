@@ -13,8 +13,8 @@ spec:
         app: frontend
     spec:
       containers:
-      - name: nginx
-        image: nginx:1.7.9
+      - name: frontend
+        image: frontend
         imagePullPolicy: Never
         ports:
         - containerPort: 80
