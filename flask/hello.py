@@ -36,7 +36,7 @@ def get():
 
 @app.route("/urls", methods=["POST"])
 def postlist():
-    if not request.json or not 'body' in request.json:
+    if not request.json or not 'body' in request.json or request.json['body'] is None:
         return jsonify(status="OK", code=200, message="nothing to store", data={})
     postjson = request.json
 

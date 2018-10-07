@@ -22,7 +22,7 @@ def get_body(da_link):
         return {"body": body, "title": title, "url": da_link}
     except:
         logging.debug(f"Invalid link: {da_link}")
-        return {}
+        return {"body": None}
 
 
 def get_urls_from_body(body, url):
