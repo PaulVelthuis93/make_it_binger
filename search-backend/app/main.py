@@ -17,46 +17,25 @@ def page_not_found(e):
     return jsonify({"message": "The requested url is not allowed"}), 406
 
 
-
-def send_request_to_elastic(keywords):
-    query = f"""\
-    {
-    'query': {
-        'multi_match' : {
-            'query': '{keywords}',
-            'fields': ['body']
-        }
-    },
-        '_source': ['title', 'body', 'url']
-    }    
-    """
-    
+def send_request_to_elastic(keywords="", fields = "[\"body\", \"title\"]", source = "[\"title\", \"url\"]"):
+    query = '{"query": {"multi_match": {"query": {}, "fields": {}}}, ' \
+            '"_source": {}}'.format(keywords, fields, source)
     results = requests.post("http://elasticsearch:9200/", data=query)
-    
+    logger.debug("Query submitted:\n{}".format(query))
     reply = {
         'response': results,
         'status': 200,
         'mimetype': 'application/json'}
-    
-    # es_body = {"doc":{"body":body, "url": url, "links": urls, "title": title, "timestamp": time.time()}}
-    # try:
-    #     # title, timestamp, links
-    #     es = Elasticsearch([])
-    #     es.index(index='urls', doc_type='doc', body=es_body)
-    #     return "\'" + str(url) + "\' posted to elasticsearch!"
-    # except:
-    #     logging.warning('Bleuh', exc_info=True)
     return reply
-    
-    
-# def sort_results():
-#     pass
 
 
 @app.route('/bing-it', methods=['POST'])
 def post():
-    keywords = requests.json['keywords']  # TODO: keywords must be list
-    elastic_response = send_request_to_elastic(keywords)
+    r = requests.json
+    elastic_response = send_request_to_elastic(
+        keywords=(r['keywords']),
+        fields=(r['fields']),
+        source=(r['source']))
     return Response(**elastic_response)
 
 if __name__ == "__main__":
