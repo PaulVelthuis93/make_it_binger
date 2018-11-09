@@ -1,0 +1,11 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+  - 'build'
+  - '-t'
+  - 'eu.gcr.io/$PROJECT_ID/flask:$_IMAGE_LABEL'
+  - '-f'
+  - './Dockerfile'
+  - '.'
+images:
+- 'eu.gcr.io/$PROJECT_ID/flask:$_IMAGE_LABEL'
