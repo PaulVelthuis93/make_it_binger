@@ -18,6 +18,7 @@ def hello():
     lines= """Hello World! <br> You can go to endpoint get to get the information, <br> or post to post the information """
     return lines
 
+
 @app.route("/url", methods=["GET"])
 def get():
     message = r.lpop('q')                                             # Checks for message
@@ -25,20 +26,11 @@ def get():
         return "https://kafka.apache.org/intro"
     return message.decode("utf-8")
 
-# @app.route("/url", methods=["POST"])
-# def post():
-#     if not request.json or not 'url' in request.json:
-#         abort(400)
-#     urlstring = request.json['url']
-#     r.rpush("q", urlstring)
-#     return "\'" + urlstring + "\' posted to redis!"
 
 @app.route("/urls", methods=["POST"])
 def postlist():
-    logging.warning("im in post!")
-    app.logger.info('there is a post!')
-    if not request.json or not 'url' in request.json or not 'title' in request.json or not 'urls' in request.json or not 'body' in request.json:
-        abort(400)
+    if not request.json or not 'body' in request.json or request.json['body'] is None:
+        return jsonify(status="OK", code=200, message="nothing to store", data={})
     postjson = request.json
 
     elastic_answer = send_data_to_elastic(**postjson)

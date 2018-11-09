@@ -1,5 +1,0 @@
-redis==2.10.6
-rq==0.11.0
-rq-dashboard
-beautifulsoup4==4.6.0
-elasticsearch==6.2.0

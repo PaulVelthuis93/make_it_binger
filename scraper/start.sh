@@ -9,6 +9,5 @@ fi
 kubectl config use-context minikube
 eval $(minikube docker-env)
 
-
-kubectl apply -f kubernetes/
+kubectl apply -f k8s
 docker build -t scraper-image . && kubectl delete pods -l app=scraper
