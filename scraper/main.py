@@ -14,6 +14,7 @@ def get_url_from_redis():
         return None
     return url.text
 
+
 def get_body(da_link):
     try:
         r = requests.get(da_link)
@@ -39,6 +40,7 @@ def get_urls_from_body(body, url):
         logging.debug(f"Invalid url: {url}")
     return links
 
+
 def send_data_to_binger(meta_data):
     headers = {'Content-type': 'application/json'}
     try:
@@ -48,6 +50,7 @@ def send_data_to_binger(meta_data):
         return result
     except:
         logging.warning('Bleuh', exc_info=True)
+
 
 while True:
     url = get_url_from_redis()

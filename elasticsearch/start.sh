@@ -9,8 +9,5 @@ fi
 kubectl config use-context minikube
 eval $(minikube docker-env)
 
+kubectl apply -f k8s
 
-kubectl apply -f ./jupyter-notebook.yaml --validate=false 
-docker build -t jupyter-notebook . && kubectl delete pods -l app=jupyter-notebook
-
-minikube service jupyter-notebook
