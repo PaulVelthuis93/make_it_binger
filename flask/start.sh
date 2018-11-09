@@ -9,8 +9,7 @@ fi
 kubectl config use-context minikube
 eval $(minikube docker-env)
 
-
-kubectl apply -f ./flask.yaml --validate=false 
+kubectl apply -f ./k8s/flask.yaml --validate=false 
 docker build -t binger-api . && kubectl delete pods -l app=binger-api
 
 minikube service binger-api

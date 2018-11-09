@@ -34,26 +34,12 @@ spec:
           storage: 5Gi
       
 ---
+apiVersion: v1
 kind: StorageClass
 apiVersion: storage.k8s.io/v1
 metadata:
   name: fast
-provisioner: k8s.io/minikube-hostpath
----
-# kind: PersistentVolume
-# apiVersion: v1
-# metadata:
-#   name: redis-volume
-#   labels:
-#     type: local
-# spec:
-#   storageClassName: fast
-#   capacity:
-#     storage: 10Gi
-#   accessModes:
-#     - ReadWriteOnce
-#   hostPath:
-#     path: "/data/"
+provisioner: k8s.io/google-cloud-hostpath
 ---
 apiVersion: v1
 kind: Service

@@ -11,7 +11,7 @@ spec:
       component: elasticsearch
       role: master
   serviceName: elasticsearch-master
-  replicas: 3
+  replicas: 1
   template:
     metadata:
       labels:
@@ -29,7 +29,7 @@ spec:
           privileged: true
       containers:
       - name: es-master
-        image: quay.io/pires/docker-elasticsearch-kubernetes:6.3.0
+        image: quay.io/pires/docker-elasticsearch-kubernetes:6.3.2
         env:
         - name: NAMESPACE
           valueFrom:
@@ -42,7 +42,7 @@ spec:
         - name: CLUSTER_NAME
           value: myesdb
         - name: NUMBER_OF_MASTERS
-          value: "2"
+          value: "1"
         - name: NODE_MASTER
           value: "true"
         - name: NODE_INGEST

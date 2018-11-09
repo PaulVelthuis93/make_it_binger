@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: k8s.gcr.io/redis:e2e
+        ports:
+        - containerPort: 6379
+        resources:
+          limits:
+            cpu: "0.1"
+        volumeMounts:
+        - mountPath: "/data"
+          name: redis-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: fast
+      resources:
+        requests:
+          storage: 5Gi
+      
+---
+apiVersion: v1
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: fast
+provisioner: k8s.io/minikube-hostpath
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    name: redis
+spec:
+  ports:
+    - port: 6379
+      name: redis
+  clusterIP: None
+  selector:
+    app: redis
