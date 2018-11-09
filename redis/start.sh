@@ -11,7 +11,7 @@ kubectl config use-context minikube
 
 # kubectl create configmap example-redis-config --from-file=redis-config
 
-kubectl apply -f ./redis-pod.yaml --validate=false 
+kubectl apply -f ./k8s/redis-pod.yaml --validate=false 
 #docker build -t redis . &&
 kubectl delete pods -l app=redis
 
