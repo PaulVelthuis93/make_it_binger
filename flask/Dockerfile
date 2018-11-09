@@ -4,7 +4,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
-COPY hello.py hello.py
+COPY binger-api.py binger-api.py
 
-ENV FLASK_APP hello.py
-CMD ["python","hello.py"]
+ENV FLASK_APP binger-api.py
+CMD ["python","binger-api.py"]
