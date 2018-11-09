@@ -1,4 +1,4 @@
-#!/bin/sh
+gcloud container clusters get-credentials binger --zone europe-west4-a --project xomnia-search-engine-training#!/bin/sh
 set -e
 
 # Make sure minikube is running:
